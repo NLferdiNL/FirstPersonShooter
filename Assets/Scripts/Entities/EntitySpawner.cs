@@ -60,8 +60,6 @@ public class EntitySpawner : MonoBehaviour {
 
         newEntTransform.position += spawnpoint.up * 3;
 
-        Debug.Log(spawnpoint.position);
-
         MoveTo moveTo = newEnt.GetComponent<MoveTo>();
 
         pool.Add(newEnt);

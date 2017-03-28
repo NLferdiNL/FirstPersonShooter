@@ -16,7 +16,7 @@ public class Flashlight : Item {
     }
 
     void FixedUpdate() {
-        light.enabled = _abilityEnabled;
+        light.intensity = _abilityEnabled ? 1 : 0.1f;
     }
     
 }
