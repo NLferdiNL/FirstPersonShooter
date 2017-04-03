@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class EntitySpawner : MonoBehaviour {
+public class EntitySpawner : NetworkBehaviour {
 
     [SerializeField]
     float timer = 5.0f;
@@ -26,6 +27,14 @@ public class EntitySpawner : MonoBehaviour {
     Transform goal;
 
     void Start() {
+        if (NetworkServer.connections.Count > 0)
+        {
+
+        }
+        else
+        {
+            this.enabled = false;
+        }
         Transform [] tempSpawnpointsArray = spawnpointContainer.GetComponentsInChildren<Transform>();
         spawnpoints = new Transform[tempSpawnpointsArray.Length - 1];
         for(int i = 0; i < tempSpawnpointsArray.Length; i++) {
@@ -59,6 +68,8 @@ public class EntitySpawner : MonoBehaviour {
         newEntTransform.rotation = spawnpoint.rotation;
 
         newEntTransform.position += spawnpoint.up * 3;
+
+        NetworkServer.Spawn(newEnt);
 
         MoveTo moveTo = newEnt.GetComponent<MoveTo>();
 

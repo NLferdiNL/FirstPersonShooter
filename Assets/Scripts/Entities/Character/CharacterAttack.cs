@@ -15,6 +15,7 @@ public class CharacterAttack : MonoBehaviour {
         set { currentWeapon = value; }
     }
 
+#pragma warning disable 414 // Disable the never used warning
     [SerializeField]
     float punchDamage = 1.0f;
 
@@ -27,6 +28,7 @@ public class CharacterAttack : MonoBehaviour {
     bool _punchCooling = false;
 
     bool inAction;
+#pragma warning restore 414 // Restore it
 
     void Start() {
         inputData = GetComponent<InputData>();
@@ -49,7 +51,7 @@ public class CharacterAttack : MonoBehaviour {
             if (_currentWeapon.owner != gameObject) {
                 _currentWeapon.owner = gameObject;
             }
-            _currentWeapon.attackDown = inputData.leftClick;
+            _currentWeapon.attackDown = leftClickDown;
         } else if (_currentWeapon.type == "Tool") {
             if(leftClickDown) {
                 _currentWeapon.ToggleEnabled();

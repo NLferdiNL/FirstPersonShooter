@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class BaseProjectile : MonoBehaviour {
 
@@ -14,7 +15,9 @@ public class BaseProjectile : MonoBehaviour {
 
     protected bool initialized = false;
 
-    Transform transform;
+    new Transform transform;
+
+    AudioSource audioSource;
 
     public void Initialize(ProjectileData data, GameObject _owner) {
         speed = data.speed;
@@ -24,6 +27,9 @@ public class BaseProjectile : MonoBehaviour {
         owner = _owner;
 
         transform = GetComponent<Transform>();
+        audioSource = GetComponent<AudioSource>();
+
+        audioSource.clip = data.impactNoise;
 
         initialized = true;
     }
@@ -64,19 +70,25 @@ public class BaseProjectile : MonoBehaviour {
             if (idmg.penetrable) {
                 health -= idmg.penetrationDamage;
             } else {
-                EndProjectile();
+                StartCoroutine(EndAfterAudio());
             }
 
             if (health <= 0) {
-                EndProjectile();
+                StartCoroutine(EndAfterAudio());
             }
         } else {
-            EndProjectile();
+            StartCoroutine(EndAfterAudio());
         }
     }
 
     void EndProjectile() {
         Destroy(gameObject);
+    }
+
+    IEnumerator EndAfterAudio() {
+        audioSource.Play();
+        yield return new WaitWhile(() => audioSource.isPlaying);
+        EndProjectile();
     }
 }
     

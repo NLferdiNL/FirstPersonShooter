@@ -36,13 +36,16 @@ public class ProjectileWeapon : Item {
     [SerializeField]
     protected bool _weaponCooling = false;
 
-    protected Transform _transform;
+    [SerializeField]
+    protected AudioClip _reloadNoise;
 
     protected ProjectileData _projData;
 
-    protected void Start() {
+    new protected void Start() {
         _transform = GetComponent<Transform>();
         _projData = GetComponent<ProjectileData>();
+
+        base.Start();
     }
 
     protected void FixedUpdate() {
@@ -54,8 +57,10 @@ public class ProjectileWeapon : Item {
     protected void Fire() {
         if (_currentClip > 0 && !_reloading && !_weaponCooling) {
             _currentClip -= 1;
-            StartCoroutine("WeaponCooldown");
+            _audioSource.clip = _action;
+            _audioSource.Play();
             SpawnProjectiles();
+            StartCoroutine("WeaponCooldown");
         } else if(!_reloading && _currentClip == 0) {
             ReloadClip();
         }
@@ -84,16 +89,22 @@ public class ProjectileWeapon : Item {
     }
 
     IEnumerator ReloadTimer() {
+        //_transform.Rotate(new Vector3(90, 0, 0));
+        _audioSource.clip = _reloadNoise;
+        _audioSource.Play();
         _reloading = true;
         yield return new WaitForSeconds(_reloadTime);
+        //_transform.Rotate(new Vector3(-90, 0, 0));
         _ammoBag -= (_clipSize - _currentClip);
         _currentClip = _clipSize;
         _reloading = false;
     }
 
     IEnumerator WeaponCooldown() {
+        //_transform.Rotate(new Vector3(-5, 0, 0));
         _weaponCooling = true;
         yield return new WaitForSeconds(_weaponCooldown);
+        //_transform.Rotate(new Vector3(5, 0, 0));
         _weaponCooling = false;
     }
 }

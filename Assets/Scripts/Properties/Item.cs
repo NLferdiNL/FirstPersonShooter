@@ -21,10 +21,17 @@ public class Item : IPickUp {
     [SerializeField]
     protected bool _attackDown = false;
 
+    protected Transform _transform;
+
     [SerializeField]
     protected GameObject _owner;
 
     protected Animator _animator;
+
+    [SerializeField]
+    protected AudioClip _action;
+
+    protected AudioSource _audioSource;
 
     public float maxReach {
         get { return _maxReach; }
@@ -72,6 +79,11 @@ public class Item : IPickUp {
         }
     }
 
+    protected void Start() {
+        _animator = GetComponent<Animator>();
+        _audioSource = GetComponent<AudioSource>();
+    }
+
     protected void PrimaryFire() {
         Debug.LogError(this.GetType() + " has not defined a custom PrimaryFire function and will do nothing when it is used.");
     }
@@ -89,7 +101,9 @@ public class Item : IPickUp {
     }
 
     IEnumerator _StartCooldown() {
+        _transform.Rotate(new Vector3(90, 0, 0));
         yield return new WaitForSeconds(_cooldownTime);
+        _transform.Rotate(new Vector3(-90, 0, 0));
         _isReady = true;
     }
 }

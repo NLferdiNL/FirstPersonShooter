@@ -14,6 +14,9 @@ public class ProjectileData : MonoBehaviour {
     [SerializeField]
     float _damage;
 
+    [SerializeField]
+    AudioClip _impactNoise;
+
     public float health {
         get { return _health; }
     }
@@ -28,6 +31,10 @@ public class ProjectileData : MonoBehaviour {
 
     public float damage {
         get { return _damage; }
+    }
+
+    public AudioClip impactNoise {
+        get { return _impactNoise; }
     }
 
 }

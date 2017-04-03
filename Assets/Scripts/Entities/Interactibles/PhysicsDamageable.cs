@@ -3,7 +3,7 @@
 [RequireComponent(typeof(Rigidbody))]
 public class PhysicsDamageable : IDamagable {
 
-    Rigidbody rigidbody;
+    new Rigidbody rigidbody;
 
     protected void Start() {
         rigidbody = GetComponent<Rigidbody>();

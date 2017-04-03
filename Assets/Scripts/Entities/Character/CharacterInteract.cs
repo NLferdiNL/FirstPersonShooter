@@ -5,7 +5,7 @@ public class CharacterInteract : MonoBehaviour {
 
     InputData inputData;
     CharacterStatus status;
-    CharacterAttack attacker;
+    CharacterAttack attacker = new CharacterAttack();
 
     [SerializeField]
     LayerMask rayCastMask;
