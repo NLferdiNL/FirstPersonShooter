@@ -18,7 +18,7 @@ public class SteamVR_Camera : MonoBehaviour
 	public Transform offset { get { return _head; } } // legacy
 	public Transform origin { get { return _head.parent; } }
 
-	public new Camera camera { get; private set; }
+	new public Camera camera { get; private set; }
 
 	[SerializeField]
 	private Transform _ears;

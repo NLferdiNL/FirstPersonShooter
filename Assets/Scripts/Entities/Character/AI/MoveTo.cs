@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
-[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(UnityEngine.AI.NavMeshAgent))]
 public class MoveTo : NetworkBehaviour {
 
     [SerializeField]
@@ -19,7 +19,7 @@ public class MoveTo : NetworkBehaviour {
     }
 
     void Start() {
-        NavMeshAgent agent = GetComponent<NavMeshAgent>();
+        UnityEngine.AI.NavMeshAgent agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         agent.destination = goal.position;
     }
 }

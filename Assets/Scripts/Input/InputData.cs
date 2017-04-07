@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[DisallowMultipleComponent]
 public class InputData : MonoBehaviour {
 
     Vector3 _movement = new Vector3(0, 0, 0); // x and z used to do movement forward and left and y for jump
@@ -11,6 +12,22 @@ public class InputData : MonoBehaviour {
          _rightClick, 
          _rightClickDown,
          _interact; // actions such as shoot, aim and interact
+
+    [SerializeField]
+    float _vibrationStrength = 0;
+
+    [SerializeField]
+    float _vibrationLength = 0;
+
+    public float vibrationStrength {
+        get { return _vibrationStrength; }
+        set { _vibrationStrength = value; }
+    }
+
+    public float vibrationLength {
+        get { return _vibrationLength; }
+        set { _vibrationLength = value; }
+    }
 
     int  _scroll = 0; // used for weapon selection
 

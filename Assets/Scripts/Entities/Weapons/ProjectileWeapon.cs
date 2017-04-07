@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Networking;
 
 [RequireComponent(typeof(ProjectileData))]
 public class ProjectileWeapon : Item {
 
     [SerializeField]
     protected GameObject _projectile;
+
+	[SerializeField]
+	protected GameObject _thisGameobject;
 
     [SerializeField]
     protected float _projectileSpread = 0.0f;
@@ -42,6 +46,10 @@ public class ProjectileWeapon : Item {
     protected ProjectileData _projData;
 
     new protected void Start() {
+		if (NetworkServer.connections.Count > 0) 
+		{
+			NetworkServer.Spawn(_thisGameobject);
+		}
         _transform = GetComponent<Transform>();
         _projData = GetComponent<ProjectileData>();
 
@@ -53,20 +61,23 @@ public class ProjectileWeapon : Item {
             Fire();
         }
     }
-
+	
     protected void Fire() {
         if (_currentClip > 0 && !_reloading && !_weaponCooling) {
+            _isFiring = true;
             _currentClip -= 1;
             _audioSource.clip = _action;
             _audioSource.Play();
-            SpawnProjectiles();
+            //SpawnProjectiles();
+            CmdSpawnProjectiles();
             StartCoroutine("WeaponCooldown");
         } else if(!_reloading && _currentClip == 0) {
             ReloadClip();
         }
     }
 
-    protected void SpawnProjectiles() {
+    [Command]
+    protected void CmdSpawnProjectiles() {
         for (int i = 0; i < _projectilesToFire; i++) {
             GameObject projectile = Instantiate<GameObject>(_projectile);
             Transform projTransform = projectile.GetComponent<Transform>();
@@ -79,6 +90,8 @@ public class ProjectileWeapon : Item {
                                              0));
 
             projectile.GetComponent<BaseProjectile>().Initialize(_projData, _owner);
+
+            NetworkServer.Spawn(projectile);
         }
     }
 
@@ -106,5 +119,6 @@ public class ProjectileWeapon : Item {
         yield return new WaitForSeconds(_weaponCooldown);
         //_transform.Rotate(new Vector3(5, 0, 0));
         _weaponCooling = false;
+        _isFiring = false;
     }
 }

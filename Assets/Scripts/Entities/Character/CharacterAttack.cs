@@ -19,6 +19,12 @@ public class CharacterAttack : MonoBehaviour {
     [SerializeField]
     float punchDamage = 1.0f;
 
+    [SerializeField, Range(0,1)]
+    float vibrationStrength = 1;
+
+    [SerializeField]
+    float vibrationLength = 0.5f;
+
     [SerializeField]
     float punchReach = 2.0f;
 
@@ -51,7 +57,11 @@ public class CharacterAttack : MonoBehaviour {
             if (_currentWeapon.owner != gameObject) {
                 _currentWeapon.owner = gameObject;
             }
-            _currentWeapon.attackDown = leftClickDown;
+            _currentWeapon.attackDown = _currentWeapon.automatic ? leftClick : leftClickDown;
+            if (_currentWeapon.isFiring) {
+                inputData.vibrationStrength = vibrationStrength;
+                inputData.vibrationLength = vibrationLength;
+            }
         } else if (_currentWeapon.type == "Tool") {
             if(leftClickDown) {
                 _currentWeapon.ToggleEnabled();

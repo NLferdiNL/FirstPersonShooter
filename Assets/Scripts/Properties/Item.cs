@@ -10,6 +10,20 @@ public class Item : IPickUp {
     protected GameObject _body;
 
     [SerializeField]
+    protected bool _automatic = false;
+
+    public bool automatic {
+        get { return _automatic; }
+    }
+
+    [SerializeField]
+    protected bool _isFiring = false;
+
+    public bool isFiring {
+        get { return _isFiring; }
+    }
+
+    [SerializeField]
     protected float _damage = 1.0f;
 
     [SerializeField]
