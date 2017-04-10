@@ -5,7 +5,7 @@ public class CharacterInteract : MonoBehaviour {
 
     InputData inputData;
     CharacterStatus status;
-    CharacterAttack attacker = new CharacterAttack();
+    //CharacterAttack attacker = new CharacterAttack();
 
     [SerializeField]
     LayerMask rayCastMask;
@@ -42,7 +42,7 @@ public class CharacterInteract : MonoBehaviour {
         }
     }
 
-    public void GiveWeapon(GameObject weapon) {
+    /*public void GiveWeapon(GameObject weapon) {
         if (attacker != null) {
             GameObject droppedWeapon = attacker.currentWeapon.gameObject;
             weapon.transform.parent = droppedWeapon.transform.parent;
@@ -53,7 +53,7 @@ public class CharacterInteract : MonoBehaviour {
             droppedWeapon.GetComponent<Rigidbody>().isKinematic = false;
             weapon.GetComponent<Rigidbody>().isKinematic = true;
         }
-    }
+    }*/
 
     public void Heal(float points) {
         if (status != null) {

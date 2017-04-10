@@ -1,18 +1,28 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Networking;
 
 // TBD: Revamp weapons system.
 [RequireComponent(typeof(InputData))]
-public class CharacterAttack : MonoBehaviour {
+public class CharacterAttack : NetworkBehaviour {
 
     InputData inputData;
 
     [SerializeField]
-    Item _currentWeapon;
+    Item _currentLeftWeapon;
 
-    public Item currentWeapon {
-        get { return currentWeapon; }
-        set { currentWeapon = value; }
+    public Item currentLeftWeapon {
+        get { return _currentLeftWeapon; }
+        set { _currentLeftWeapon = value; }
+    }
+
+    [SerializeField]
+    Item _currentRightWeapon;
+
+    public Item currentRightWeapon
+    {
+        get { return _currentRightWeapon; }
+        set { _currentRightWeapon = value; }
     }
 
 #pragma warning disable 414 // Disable the never used warning
@@ -52,26 +62,40 @@ public class CharacterAttack : MonoBehaviour {
             leftClick = rightClick = false;
         }
 
-        System.Type currentWepType = _currentWeapon.GetType();
-        if (currentWepType == typeof(ProjectileWeapon)) {
-            if (_currentWeapon.owner != gameObject) {
-                _currentWeapon.owner = gameObject;
-            }
-            _currentWeapon.attackDown = _currentWeapon.automatic ? leftClick : leftClickDown;
-            if (_currentWeapon.isFiring) {
-                inputData.vibrationStrength = vibrationStrength;
-                inputData.vibrationLength = vibrationLength;
-            }
-        } else if (_currentWeapon.type == "Tool") {
-            if(leftClickDown) {
-                _currentWeapon.ToggleEnabled();
-            }
-        }/* else if (leftClick) {
+        ActWeapon(_currentLeftWeapon, leftClick, leftClickDown);
+        ActWeapon(_currentRightWeapon, rightClick, rightClickDown);
+
+        /* else if (leftClick) {
             Primary();
         } else if (rightClick) {
             Secondary();
         }*/
 
+    }
+    
+    void ActWeapon(Item currentWeapon, bool click, bool clickDown)
+    {
+        System.Type currentWepType = currentWeapon.GetType();
+        if (currentWepType == typeof(ProjectileWeapon))
+        {
+            if (currentWeapon.owner != gameObject)
+            {
+                currentWeapon.owner = gameObject;
+            }
+            currentWeapon.attackDown = currentWeapon.automatic ? click : clickDown;
+            if (currentWeapon.isFiring)
+            {
+                inputData.rightVibrationStrength = vibrationStrength;
+                inputData.rightVibrationLength = vibrationLength;
+            }
+        }
+        else if (currentWeapon.type == "Tool")
+        {
+            if (clickDown)
+            {
+                currentWeapon.ToggleEnabled();
+            }
+        }
     }
 
     /*void Primary() {

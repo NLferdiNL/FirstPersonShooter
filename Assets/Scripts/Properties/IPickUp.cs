@@ -1,10 +1,9 @@
-﻿using UnityEngine;
-using UnityEngine.Networking;
+﻿using UnityEngine.Networking;
 
 public class IPickUp : NetworkBehaviour {
 
     public void Interact(CharacterInteract other) {
-        other.GiveWeapon(gameObject);
+        //other.GiveWeapon(gameObject);
     }
 
 }

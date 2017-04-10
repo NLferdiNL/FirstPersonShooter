@@ -14,19 +14,35 @@ public class InputData : MonoBehaviour {
          _interact; // actions such as shoot, aim and interact
 
     [SerializeField]
-    float _vibrationStrength = 0;
+    float _leftVibrationStrength = 0;
 
     [SerializeField]
-    float _vibrationLength = 0;
+    float _leftVibrationLength = 0;
 
-    public float vibrationStrength {
-        get { return _vibrationStrength; }
-        set { _vibrationStrength = value; }
+    public float leftVibrationStrength {
+        get { return _leftVibrationStrength; }
+        set { _leftVibrationStrength = value; }
     }
 
-    public float vibrationLength {
-        get { return _vibrationLength; }
-        set { _vibrationLength = value; }
+    public float leftVibrationLength {
+        get { return _leftVibrationLength; }
+        set { _leftVibrationLength = value; }
+    }
+
+    [SerializeField]
+    float _rightVibrationStrength = 0;
+
+    [SerializeField]
+    float _rightVibrationLength = 0;
+
+    public float rightVibrationStrength {
+        get { return _rightVibrationStrength; }
+        set { _leftVibrationStrength = value; }
+    }
+
+    public float rightVibrationLength {
+        get { return _rightVibrationLength; }
+        set { _rightVibrationLength = value; }
     }
 
     int  _scroll = 0; // used for weapon selection

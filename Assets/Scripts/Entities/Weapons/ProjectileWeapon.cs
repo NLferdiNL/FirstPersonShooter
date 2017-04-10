@@ -8,9 +8,6 @@ public class ProjectileWeapon : Item {
     [SerializeField]
     protected GameObject _projectile;
 
-	[SerializeField]
-	protected GameObject _thisGameobject;
-
     [SerializeField]
     protected float _projectileSpread = 0.0f;
 
@@ -46,10 +43,6 @@ public class ProjectileWeapon : Item {
     protected ProjectileData _projData;
 
     new protected void Start() {
-		if (NetworkServer.connections.Count > 0) 
-		{
-			NetworkServer.Spawn(_thisGameobject);
-		}
         _transform = GetComponent<Transform>();
         _projData = GetComponent<ProjectileData>();
 
@@ -58,26 +51,26 @@ public class ProjectileWeapon : Item {
 
     protected void FixedUpdate() {
         if (_attackDown) {
-            Fire();
+            CmdFire();
         }
     }
 	
-    protected void Fire() {
+    [Command]
+    protected void CmdFire() {
         if (_currentClip > 0 && !_reloading && !_weaponCooling) {
             _isFiring = true;
             _currentClip -= 1;
             _audioSource.clip = _action;
             _audioSource.Play();
             //SpawnProjectiles();
-            CmdSpawnProjectiles();
+            SpawnProjectiles();
             StartCoroutine("WeaponCooldown");
         } else if(!_reloading && _currentClip == 0) {
             ReloadClip();
         }
     }
-
-    [Command]
-    protected void CmdSpawnProjectiles() {
+    
+    protected void SpawnProjectiles() {
         for (int i = 0; i < _projectilesToFire; i++) {
             GameObject projectile = Instantiate<GameObject>(_projectile);
             Transform projTransform = projectile.GetComponent<Transform>();

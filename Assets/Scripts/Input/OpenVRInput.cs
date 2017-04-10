@@ -1,31 +1,35 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Networking;
 
 [RequireComponent(typeof(InputData))]
 public class OpenVRInput : MonoBehaviour {
 
-    public bool triggerButtonDown = false;
-
     private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
 
     [SerializeField]
-    private SteamVR_TrackedObject trackedObj;
+    private SteamVR_TrackedObject leftControllerObject;
 
-    private SteamVR_Controller.Device controller {
-        get { return SteamVR_Controller.Input((int)trackedObj.index); }
+    [SerializeField]
+    private SteamVR_TrackedObject rightControllerObject;
+
+    private SteamVR_Controller.Device leftController {
+        get { return SteamVR_Controller.Input((int)leftControllerObject.index); }
+    }
+
+    private SteamVR_Controller.Device rightController
+    {
+        get { return SteamVR_Controller.Input((int)rightControllerObject.index); }
     }
 
     InputData inputData;
 
     void Start() {
         inputData = GetComponent<InputData>();
-
-        if(trackedObj == null)
-            trackedObj = transform.parent.GetComponent<SteamVR_TrackedObject>();
     }
 
     void FixedUpdate() {
-        if (controller == null) {
+        if (leftController == null || rightController == null) {
 
             Debug.LogError("Controller not initialized");
 
@@ -33,23 +37,42 @@ public class OpenVRInput : MonoBehaviour {
 
         }
 
-        inputData.leftClick = controller.GetPress(triggerButton);
+        inputData.leftClick = leftController.GetPress(triggerButton);
 
-        inputData.leftClickDown = controller.GetPressDown(triggerButton);
+        inputData.leftClickDown = leftController.GetPressDown(triggerButton);
 
-        if (inputData.vibrationLength > 0)
-            StartCoroutine("Vibrate");
+        inputData.rightClick = leftController.GetPress(triggerButton);
 
-        
+        inputData.rightClickDown = leftController.GetPressDown(triggerButton);
+
+        if (inputData.leftVibrationLength > 0)
+            StartCoroutine("LeftVibrate");
+
+        if (inputData.rightVibrationLength > 0)
+            StartCoroutine("RightVibrate");
+
+
     }
 
-    IEnumerator Vibrate() {
-        for (float i = 0; i < inputData.vibrationLength; i += Time.deltaTime) {
-            controller.TriggerHapticPulse((ushort)Mathf.Lerp(0, 3999, inputData.vibrationStrength));
+    IEnumerator LeftVibrate() {
+        for (float i = 0; i < inputData.leftVibrationLength; i += Time.deltaTime) {
+            leftController.TriggerHapticPulse((ushort)Mathf.Lerp(0, 3999, inputData.leftVibrationStrength));
             yield return null;
         }
 
-        inputData.vibrationStrength = 0;
-        inputData.vibrationLength = 0;
+        inputData.leftVibrationStrength = 0;
+        inputData.leftVibrationLength = 0;
+    }
+
+    IEnumerator RightVibrate()
+    {
+        for (float i = 0; i < inputData.rightVibrationLength; i += Time.deltaTime)
+        {
+            leftController.TriggerHapticPulse((ushort)Mathf.Lerp(0, 3999, inputData.rightVibrationStrength));
+            yield return null;
+        }
+
+        inputData.leftVibrationStrength = 0;
+        inputData.leftVibrationLength = 0;
     }
 }
